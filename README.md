@@ -2,7 +2,7 @@
 
 <img alt="Illustration of a sheep" width=320 align=right src="https://user-images.githubusercontent.com/332258/46430732-c7bf5c80-c6fe-11e8-9cc8-2abc4e68dce2.jpg">
 
-![Travis status](https://img.shields.io/travis/NerdWalletOSS/shepherd/master.svg?style=flat-square)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/NerdWalletOSS/shepherd/release.yml?style=flat-square)](https://github.com/NerdWalletOSS/shepherd/actions)
 ![npm version](https://img.shields.io/npm/v/@nerdwallet/shepherd.svg?style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/NerdWalletOSS/shepherd.svg?style=flat-square)
 
@@ -20,6 +20,18 @@ Install the Shepherd CLI:
 
 ```sh
 npm install -g @nerdwallet/shepherd
+```
+
+If using GitHub Enterprise, ensure the following environment variable is exported:
+
+```
+export SHEPHERD_GITHUB_ENTERPRISE_URL={company_github_enterprise_url} # e.g., github.test.com
+```
+
+If using ssh, ensure that your GITHUB_TOKEN is exported:
+
+```
+export GITHUB_TOKEN=<PAT>
 ```
 
 Shepherd will now be available as the `shepherd` command in your shell:

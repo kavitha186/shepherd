@@ -17,21 +17,23 @@ export default async (context: IMigrationContext) => {
     adapter,
     logger,
   } = context;
+
   function onRetry(numSeconds: number) {
     logger.info(`Hit rate limit; waiting ${numSeconds} seconds and retrying.`);
   }
 
   let repos;
-
   if (selectedRepos) {
     logger.info(`Using ${selectedRepos.length} selected repos`);
     repos = selectedRepos;
   } else {
     const spinner = logger.spinner('Loading candidate repos');
-    repos = (await adapter.getCandidateRepos(onRetry)) || [];
+    repos = await adapter.getCandidateRepos(onRetry);
     spinner.succeed(`Loaded ${repos.length} repos`);
   }
+
   context.migration.repos = repos;
+
   const checkedOutRepos: IRepo[] = [];
   const discardedRepos: IRepo[] = [];
 
@@ -47,6 +49,7 @@ export default async (context: IMigrationContext) => {
       spinner.fail('Failed to check out repo; skipping');
       return;
     }
+
     // We need to create the data directory before running should_migrate
     await fs.mkdirs(adapter.getDataDir(repo));
 

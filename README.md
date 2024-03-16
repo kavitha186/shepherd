@@ -82,6 +82,12 @@ hooks:
   post_checkout: npm install
   apply: mv .eslintrc .eslintrc.json
   pr_message: echo 'Hey! This PR renames `.eslintrc` to `.eslintrc.json`'
+issues:
+  title: "this is my first updated issue"
+  description: "this is my first updated issue"
+  labels: ['ENHANCEMENT', 'BUG']
+  state: closed
+  state_reason: completed
 ```
 
 ### Fields
@@ -127,6 +133,16 @@ Hooks define the core functionality of a migration in Shepherd.
   - **Description**: Commands to generate a pull request message.
   - **Output**: Anything written to `stdout` is used for the message. Multiple commands will have their outputs concatenated.
 
+- `issue`:
+  - **Description**: Command to create, update, or close issues.
+  - **Output**: Depending on the details provided in migration scripts, the issues will be created, updated or closed.
+
+- `list-issues`:
+  - **Description**: Commands to list all issues associated with a migration.
+  - **Output**: All the posted issues are listed in the table format.
+  
+
+
 ### Requirements
 
 - Optional: `should_migrate`, `post_checkout`
@@ -167,6 +183,8 @@ There are a number of commands that must be run to execute a migration:
 - `pr-preview`: Prints the commit message that would be used for each repository without actually creating a PR; uses the `pr_message` hook.
 - `pr`: Creates a PR for each repo with the message generated from the `pr_message` hook.
 - `version`: Prints Shepherd version
+- `issue`: Create, update, or close issues across multiple repository.
+- `list-issues`: List all issues associated with a migration.
 
 By default, `checkout` will use the adapter to figure out which repositories to check out, and the remaining commands will operate on all checked-out repos. To only checkout a specific repo or to operate on only a subset of the checked-out repos, you can use the `--repos` flag, which specifies a comma-separated list of repos:
 
@@ -178,18 +196,18 @@ Run `shepherd --help` to see all available commands and descriptions for each on
 
 ### Developing
 
-Run `npm install` to install dependencies.
+Run `yarn` to install dependencies.
 
-Shepherd is written in TypeScript, which requires compilation to JavaScript. When developing Shepherd, it's recommended to run `npm run build:watch` in a separate terminal. This will incrementally compile the source code as you edit it. You can then invoke the Shepherd CLI by referencing the absolute path to the compiled `cli.js` file:
+Shepherd is written in TypeScript, which requires compilation to JavaScript. When developing Shepherd, it's recommended to run `yarn build:watch` in a separate terminal. This will incrementally compile the source code as you edit it. You can then invoke the Shepherd CLI by referencing the absolute path to the compiled `cli.js` file:
 
 ```sh
 cd ../my-other-project
 ../shepherd/lib/cli.js checkout path/to/migration
 ```
 
-Shepherd currently has minimal test coverage, but we're aiming to improve that with each new PR. Tests are written with Jest and should be named in a `*.test.ts` alongside the file under test. To run the test suite, run `npm run test`.
+Shepherd currently has minimal test coverage, but we're aiming to improve that with each new PR. Tests are written with Jest and should be named in a `*.test.ts` alongside the file under test. To run the test suite, run `yarn test`.
 
-We use [ESLint](https://eslint.org/) to ensure a consistent coding style and to help prevent certain classes of problems. Run `npm run lint` to run the linter, and `npm run fix-lint` to automatically fix applicable problems.
+We use [ESLint](https://eslint.org/) to ensure a consistent coding style and to help prevent certain classes of problems. Run `yarn lint` to run the linter, and `yarn fix-lint` to automatically fix applicable problems.
 
 ### Credits
 

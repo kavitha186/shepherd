@@ -83,8 +83,8 @@ hooks:
   apply: mv .eslintrc .eslintrc.json
   pr_message: echo 'Hey! This PR renames `.eslintrc` to `.eslintrc.json`'
 issues:
-  title: "this is my first updated issue"
-  description: "this is my first updated issue"
+  title: 'this is my first updated issue'
+  description: 'this is my first updated issue'
   labels: ['ENHANCEMENT', 'BUG']
   state: closed
   state_reason: completed
@@ -130,18 +130,18 @@ Hooks define the core functionality of a migration in Shepherd.
   - **Note**: This can range from simple to complex sequences, depending on migration needs.
 
 - `pr_message`:
+
   - **Description**: Commands to generate a pull request message.
   - **Output**: Anything written to `stdout` is used for the message. Multiple commands will have their outputs concatenated.
 
 - `issue`:
+
   - **Description**: Command to create, update, or close issues.
   - **Output**: Depending on the details provided in migration scripts, the issues will be created, updated or closed.
 
 - `list-issues`:
   - **Description**: Commands to list all issues associated with a migration.
   - **Output**: All the posted issues are listed in the table format.
-  
-
 
 ### Requirements
 

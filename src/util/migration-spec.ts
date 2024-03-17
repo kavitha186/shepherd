@@ -13,7 +13,7 @@ export interface IMigrationHooks {
 }
 
 export interface IMigrationIssues {
-  title: string | number;
+  title?: string | number;
   description?: string;
   labels?: string[];
   state?: string;
@@ -92,7 +92,7 @@ export function validateSpec(spec: any) {
         .valid(...state_reason)
         .optional(),
       labels: hookSchema.optional(),
-    }),
+    }).optional(),
   });
 
   return schema.validate(spec);

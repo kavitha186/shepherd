@@ -146,16 +146,9 @@ export default class GithubService {
     return this.octokit.issues.create(criteria);
   }
 
-  public updateIssue(criteria: {
-    owner: any;
-    issue_number: number;
-    repo: any;
-    title: any;
-    body: any;
-    labels: any;
-    state: any;
-    state_reason: any;
-  }): Promise<RestEndpointMethodTypes['issues']['update']['response']> {
+  public updateIssue(
+    criteria: RestEndpointMethodTypes['issues']['update']['parameters']
+  ): Promise<RestEndpointMethodTypes['issues']['update']['response']> {
     return this.octokit.issues.update(criteria);
   }
 

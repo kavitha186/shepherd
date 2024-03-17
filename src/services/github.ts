@@ -147,9 +147,9 @@ export default class GithubService {
   }
 
   public updateIssue(criteria: {
-    owner: any;
+    owner: string;
     issue_number: number;
-    repo: any;
+    repo: string;
     title: any;
     body: any;
     labels: any;

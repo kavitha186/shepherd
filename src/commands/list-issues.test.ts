@@ -7,7 +7,7 @@ import { getIssueTrackerFile } from '../util/persisted-data';
 jest.mock('fs-extra', () => {
     return {
         // Mock other methods as needed
-        readFile: jest.fn().mockResolvedValue('{"name": "test"}'),
+        readFile: jest.fn().mockResolvedValue('[{"issue Number": "3", "issue Title": "new title"}]'),
     };
 });
 
@@ -57,9 +57,17 @@ describe('list-issue command', () => {
                 [{
                     issueNumber: '7',
                     title: 'this is my first updated issue',
-                    owner: 'newOwner',
-                    repo: 'newRepo'
-                }]
+                    owner: 'upstreamOwner',
+                    repo: 'selectedRepos'
+                },
+                {
+                    issueNumber: '8',
+                    title: 'this is my first updated issue',
+                    owner: 'newOwner1',
+                    repo: 'newRepo1'
+                },
+            
+            ]
             );
 
             await listIssues(mockContext);

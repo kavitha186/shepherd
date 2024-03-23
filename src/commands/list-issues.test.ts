@@ -7,11 +7,16 @@ import { getIssueTrackerFile } from '../util/persisted-data';
 jest.mock('fs-extra', () => {
   return {
     // Mock other methods as needed
-    readFile: jest.fn().mockResolvedValue('[{"issue Number": "3", "issue Title": "new title"}]'),
+    readFile: jest
+      .fn()
+      .mockResolvedValue(
+        '[{"issueNumber": "3", "title": "new title", "owner": "Nerdwallet", "status": "closed", "repo": "shepherd"}]'
+      ),
   };
 });
 
 jest.mock('../util/persisted-data');
+
 jest.spyOn(process.stdout, 'write').mockImplementation(function () {
   return true;
 });
@@ -58,12 +63,14 @@ describe('list-issue command', () => {
         issueNumber: '7',
         title: 'this is my first updated issue',
         owner: 'upstreamOwner',
+        status: 'open',
         repo: 'selectedRepos',
       },
       {
         issueNumber: '8',
         title: 'this is my first updated issue',
         owner: 'newOwner1',
+        status: 'open',
         repo: 'newRepo1',
       },
     ]);

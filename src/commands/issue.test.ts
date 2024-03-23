@@ -11,7 +11,7 @@ describe('issue command', () => {
   let mockContext: IMigrationContext;
   let mockContext1: IMigrationContext;
   let mockContext2: IMigrationContext;
-
+  let mockContext3: IMigrationContext;
   beforeEach(() => {
     jest.clearAllMocks();
     mockContext = {
@@ -88,6 +88,34 @@ describe('issue command', () => {
       adapter: mockAdapter,
       logger: mockLogger,
     };
+    mockContext3 = {
+      shepherd: {
+        workingDirectory: 'workingDirectory',
+      },
+      migration: {
+        migrationDirectory: 'migrationDirectory',
+        spec: {
+          id: 'id',
+          title: 'title',
+          adapter: {
+            type: 'adapter',
+          },
+          hooks: {},
+          issues: {
+            title: 'this is issue',
+            description: 'issue description',
+            state_reason: 'not_planned',
+            labels: ['bug'],
+          },
+        },
+        workingDirectory: 'workingDirectory',
+        selectedRepos: [{ name: 'selectedRepos' }],
+        repos: [{ name: 'selectedRepos' }],
+        upstreamOwner: 'upstreamOwner',
+      },
+      adapter: mockAdapter,
+      logger: mockLogger,
+    };
   });
 
   it('create issue if the issue doesnt exists in tracker', async () => {
@@ -152,5 +180,25 @@ describe('issue command', () => {
   it('should catch error when issue with no title command is accessed', async () => {
     await issue(mockContext2);
     expect(mockSpinner.fail).toHaveBeenCalledWith('No issues in the shepherd yml to post');
+  });
+  it('should catch error when issue with no title command is accessed', async () => {
+    (getIssueListsFromTracker as jest.Mock).mockResolvedValueOnce([
+      {
+        issueNumber: '7',
+        title: 'this is my first updated issue',
+        owner: 'newowner',
+        status: 'open',
+        repo: 'newrepo',
+      },
+      {
+        issueNumber: '0',
+        title: 'this is my first updated issue',
+        owner: 'newowner4',
+        status: 'open',
+        repo: 'newrepo4',
+      },
+    ]);
+    await issue(mockContext3);
+    expect(mockContext3.adapter.createIssue).toHaveBeenCalled();
   });
 });

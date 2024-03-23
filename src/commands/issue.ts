@@ -19,7 +19,11 @@ export default async (context: IMigrationContext) => {
   try {
     const title = spec.issues.title;
     const issuesList: IssueTracker[] = await getIssueListsFromTracker(context);
+    let status = spec.issues.state;
 
+    if (!status) {
+      status = 'open';
+    }
     await forEachRepo(context, async (repo) => {
       logger.spinner('Posting an issue');
 
@@ -39,6 +43,7 @@ export default async (context: IMigrationContext) => {
           issueNumber,
           title,
           owner: repo.owner,
+          status,
           repo: repo.name,
         });
         spinner.succeed('Issue posted in the repository');

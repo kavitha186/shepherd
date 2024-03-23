@@ -4,11 +4,11 @@ exports[`list-issue command should list issues when the command is invoked 1`] =
 [MockFunction] {
   "calls": [
     [
-      "╔══════════════╤═════════════╤═══════════╤═══════════╗
-║ issue Number │ issue Title │ Owner     │ Repo Name ║
-╟──────────────┼─────────────┼───────────┼───────────╢
-║ undefined    │ undefined   │ undefined │ undefined ║
-╚══════════════╧═════════════╧═══════════╧═══════════╝
+      "╔══════════════╤═════════════╤════════════╤════════╤═══════════╗
+║ issue Number │ issue Title │ Owner      │ status │ Repo Name ║
+╟──────────────┼─────────────┼────────────┼────────┼───────────╢
+║ 3            │ new title   │ Nerdwallet │ closed │ shepherd  ║
+╚══════════════╧═════════════╧════════════╧════════╧═══════════╝
 ",
     ],
   ],

@@ -1,15 +1,11 @@
 import fs from 'fs-extra';
 
-import IRepoAdapter, { IRepo } from '../adapters/base.js';
+import { IRepo } from '../adapters/base.js';
 import { IMigrationContext } from '../migration-context.js';
 import executeSteps from '../util/execute-steps.js';
 import forEachRepo from '../util/for-each-repo.js';
-import { updateRepoList } from '../util/persisted-data.js';
+import { updateRepoList, removeRepoDirectories } from '../util/persisted-data';
 
-const removeRepoDirectories = async (adapter: IRepoAdapter, repo: IRepo) => {
-  await fs.remove(adapter.getRepoDir(repo));
-  await fs.remove(adapter.getDataDir(repo));
-};
 
 export default async (context: IMigrationContext) => {
   const {

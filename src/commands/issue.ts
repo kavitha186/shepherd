@@ -1,7 +1,12 @@
 import { IMigrationContext } from '../migration-context';
 import forEachRepo from '../util/for-each-repo';
-import { IssueTracker } from '../adapters/base';
-import { getIssueListsFromTracker, updatePostedIssuesLists } from '../util/persisted-data';
+import { IRepo, IssueTracker } from '../adapters/base';
+import {
+  getIssueListsFromTracker,
+  updatePostedIssuesLists,
+  removeRepoDirectories,
+} from '../util/persisted-data';
+import executeSteps from '../util/execute-steps';
 
 export default async (context: IMigrationContext) => {
   const {
@@ -27,26 +32,32 @@ export default async (context: IMigrationContext) => {
     await forEachRepo(context, async (repo) => {
       logger.spinner('Posting an issue');
 
-      const issueNumber = issuesList
-        .find((issue) => issue.repo === repo.name)
-        ?.issueNumber?.toString();
-
-      if (issueNumber) {
-        await adapter.updateIssue(repo, issueNumber);
-        issuesList
-          .filter((issueFromTracker) => issueFromTracker.issueNumber === issueNumber)
-          .map((specificIssue) => (specificIssue.title = title));
-        spinner.succeed(`Issue updated issueNumber# ${issueNumber} for repo ${repo.name}`);
+      const stepsResults = await executeSteps(context, repo, 'should_create_issue');
+      if (!stepsResults.succeeded) {
+        await removeRepoDirectories(adapter, repo);
+        spinner.fail('Error running should_create_issue steps; skipping');
       } else {
-        const issueNumber: any = await adapter.createIssue(repo);
-        issuesList.push({
-          issueNumber,
-          title,
-          owner: repo.owner,
-          status,
-          repo: repo.name,
-        });
-        spinner.succeed('Issue posted in the repository');
+        const issueNumber = issuesList
+          .find((issue) => issue.repo === repo.name)
+          ?.issueNumber?.toString();
+
+        if (issueNumber) {
+          await adapter.updateIssue(repo, issueNumber);
+          issuesList
+            .filter((issueFromTracker) => issueFromTracker.issueNumber === issueNumber)
+            .map((specificIssue) => (specificIssue.title = title));
+          spinner.succeed(`Issue updated issueNumber# ${issueNumber} for repo ${repo.name}`);
+        } else {
+          const issueNumber: any = await adapter.createIssue(repo);
+          issuesList.push({
+            issueNumber,
+            title,
+            owner: repo.owner,
+            status,
+            repo: repo.name,
+          });
+          spinner.succeed('Issue posted in the repository');
+        }
       }
     });
     //Add the opened issues with issue_number and repo in the issue_tracker.json

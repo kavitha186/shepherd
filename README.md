@@ -79,6 +79,8 @@ hooks:
   should_migrate:
     - ls .eslintrc # Check that this file actually exists in the repo
     - git log -1 --format=%cd | grep 2018 --silent # Only migrate things that have seen commits in 2018
+  should_create_issue:
+    - node $SHEPHERD_MIGRATION_DIR/should_create_issue.js 
   post_checkout: npm install
   apply: mv .eslintrc .eslintrc.json
   pr_message: echo 'Hey! This PR renames `.eslintrc` to `.eslintrc.json`'
@@ -119,6 +121,11 @@ Hooks define the core functionality of a migration in Shepherd.
   - **Description**: Commands to determine if a repo requires migration.
   - **Behavior**: Non-zero exit values indicate the repo should not be migrated.
 
+- `should_create_issue`:
+
+  - **Description**: Commands to determine if issue needs to be posted in the repo.
+  - **Behavior**: Non-zero exit values indicate the issue should not be posted to repo.
+
 - `post_checkout`:
 
   - **Description**: Commands executed after a repo passes `should_migrate` checks.
@@ -145,7 +152,7 @@ Hooks define the core functionality of a migration in Shepherd.
 
 ### Requirements
 
-- Optional: `should_migrate`, `post_checkout`
+- Optional: `should_migrate`, `post_checkout`, `should_create_issue`
 - Required: `apply`, `pr_message`
 
 ### Environment Variables

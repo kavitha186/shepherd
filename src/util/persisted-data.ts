@@ -3,7 +3,7 @@ import yaml from 'js-yaml';
 import { differenceWith, unionWith } from 'lodash';
 import path from 'path';
 
-import { IRepo, IssueTracker } from '../adapters/base';
+import IRepoAdapter, { IRepo, IssueTracker } from '../adapters/base';
 import { IMigrationContext } from '../migration-context';
 
 const jsonStringify = (data: any) => JSON.stringify(data, undefined, 2);
@@ -28,6 +28,11 @@ const getRepoListFile = (migrationContext: IMigrationContext) => {
 
 const getIssueTrackerFile = (migrationContext: IMigrationContext) => {
   return path.join(migrationContext.migration.workingDirectory, 'issue_tracker.json');
+};
+
+export const removeRepoDirectories = async (adapter: IRepoAdapter, repo: IRepo) => {
+  await fs.remove(adapter.getRepoDir(repo));
+  await fs.remove(adapter.getDataDir(repo));
 };
 
 const getIssueListsFromTracker = async (migrationContext: IMigrationContext) => {

@@ -4,9 +4,10 @@ import mockAdapter from '../adapters/adapter.mock';
 import mockLogger from '../logger/logger.mock';
 import { getIssueListsFromTracker } from '../util/persisted-data';
 import mockSpinner from '../logger/spinner.mock';
+import executeSteps from '../util/execute-steps';
 
 jest.mock('../util/persisted-data');
-
+jest.mock('../util/execute-steps');
 describe('issue command', () => {
   let mockContext: IMigrationContext;
   let mockContext1: IMigrationContext;
@@ -26,7 +27,9 @@ describe('issue command', () => {
           adapter: {
             type: 'adapter',
           },
-          hooks: {},
+          hooks: {
+            should_create_issue: [],
+          },
           issues: {
             title: 'this is issue',
             description: 'issue description',
@@ -134,9 +137,40 @@ describe('issue command', () => {
       },
     ]);
 
+    (executeSteps as jest.Mock).mockResolvedValueOnce({
+      succeeded: true,
+      stepResults: [],
+    });
+
     await issue(mockContext);
 
     expect(mockContext.adapter.createIssue).toHaveBeenCalled();
+  });
+
+  it('create issue if the issue doesnt exists in tracker', async () => {
+    (getIssueListsFromTracker as jest.Mock).mockResolvedValueOnce([
+      {
+        issueNumber: '7',
+        title: 'this is my first updated issue',
+        owner: 'newowner',
+        repo: 'newrepo',
+      },
+      {
+        issueNumber: '0',
+        title: 'this is my first updated issue',
+        owner: 'newowner4',
+        repo: 'newrepo4',
+      },
+    ]);
+
+    (executeSteps as jest.Mock).mockResolvedValueOnce({
+      succeeded: false,
+      stepResults: [],
+    });
+
+    await issue(mockContext);
+
+    expect(mockContext.adapter.createIssue).not.toHaveBeenCalled();
   });
 
   it('update issue if the issue exists in tracker', async () => {
@@ -148,6 +182,11 @@ describe('issue command', () => {
         repo: 'selectedRepos',
       },
     ]);
+
+    (executeSteps as jest.Mock).mockResolvedValueOnce({
+      succeeded: true,
+      stepResults: [],
+    });
 
     await issue(mockContext);
 
@@ -161,6 +200,11 @@ describe('issue command', () => {
         repo: 'selectedRepos',
       },
     ]);
+
+    (executeSteps as jest.Mock).mockResolvedValueOnce({
+      succeeded: true,
+      stepResults: [],
+    });
 
     (mockContext.adapter.createIssue as jest.Mock).mockResolvedValueOnce('7');
     await issue(mockContext);
@@ -198,6 +242,11 @@ describe('issue command', () => {
         repo: 'newrepo4',
       },
     ]);
+
+    (executeSteps as jest.Mock).mockResolvedValueOnce({
+      succeeded: true,
+      stepResults: [],
+    });
     await issue(mockContext3);
     expect(mockContext3.adapter.createIssue).toHaveBeenCalled();
   });

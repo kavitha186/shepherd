@@ -6,6 +6,7 @@ import path from 'path';
 
 export interface IMigrationHooks {
   should_migrate?: string[];
+  should_create_issue?: string[];
   post_checkout?: string[];
   apply?: string[];
   pr_message?: string[];
@@ -74,6 +75,7 @@ export function validateSpec(spec: any) {
       .required(),
     hooks: Joi.object({
       should_migrate: hookSchema,
+      should_create_issue: hookSchema,
       post_checkout: hookSchema,
       apply: hookSchema,
       pr_message: hookSchema,

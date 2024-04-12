@@ -1,6 +1,6 @@
 import { IMigrationContext } from '../migration-context';
 import forEachRepo from '../util/for-each-repo';
-import { IRepo, IssueTracker } from '../adapters/base';
+import { IssueTracker } from '../adapters/base';
 import {
   getIssueListsFromTracker,
   updatePostedIssuesLists,

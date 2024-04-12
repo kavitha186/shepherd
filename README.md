@@ -80,7 +80,7 @@ hooks:
     - ls .eslintrc # Check that this file actually exists in the repo
     - git log -1 --format=%cd | grep 2018 --silent # Only migrate things that have seen commits in 2018
   should_create_issue:
-    - node $SHEPHERD_MIGRATION_DIR/should_create_issue.js 
+    - node $SHEPHERD_MIGRATION_DIR/should_create_issue.js
   post_checkout: npm install
   apply: mv .eslintrc .eslintrc.json
   pr_message: echo 'Hey! This PR renames `.eslintrc` to `.eslintrc.json`'
